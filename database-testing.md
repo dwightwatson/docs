@@ -5,6 +5,7 @@
 - [Resetting The Database After Each Test](#resetting-the-database-after-each-test)
 - [Writing Factories](#writing-factories)
     - [Factory States](#factory-states)
+    - [Factory Relationships](#factory-relationships)
     - [Factory Callbacks](#factory-callbacks)
 - [Using Factories](#using-factories)
     - [Creating Models](#creating-models)
@@ -115,6 +116,18 @@ If your state requires calculation or a `$faker` instance, you may use a Closure
         ];
     });
 
+<a name="factory-relationships"></a>
+### Factory Relationships
+
+Factories also make it easy to create and associate models with each other. Simply assign a factory instance to the foreign key and Laravel will create and associate the model automatically when creating a model instance.
+
+    $factory->define(App\Post::class, function (Faker $faker) {
+        return [
+            'user_id' => factory(App\User::class),
+            'title' => $faker->sentence,
+        ];
+    })
+
 <a name="factory-callbacks"></a>
 ### Factory Callbacks
 
@@ -208,7 +221,7 @@ In this example, we'll attach a relation to some created models. When using the 
                ->each(function ($user) {
                     $user->posts()->save(factory(App\Post::class)->make());
                 });
-                
+
 You may use the `createMany` method to create multiple related models:
 
     $user->posts()->createMany(
